@@ -160,10 +160,54 @@
   }
   .two-up figure { margin-top: 0; }
 
+  /* ---- Comparison table ---- */
+  table.compare {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 28px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+  }
+  table.compare th,
+  table.compare td {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    font-size: 14.5px;
+  }
+  table.compare th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: var(--text-dim);
+    font-weight: 500;
+    border-bottom: 1px solid var(--line);
+  }
+  table.compare td.step-label { color: var(--text); }
+  table.compare td.time {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13.5px;
+    color: var(--text-dim);
+  }
+  table.compare tr.total td {
+    border-top: 1px solid var(--line);
+    border-bottom: none;
+    font-weight: 600;
+  }
+  table.compare tr.total td.time { color: var(--cyan); }
+  table.compare tr:last-of-type td { border-bottom: none; }
+  .table-note {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 10px;
+  }
+
   @media (max-width: 720px) {
     .two-up { grid-template-columns: 1fr; }
     .stat-row { grid-template-columns: 1fr; }
     h1 { font-size: 30px; }
+    table.compare th, table.compare td { padding: 9px 10px; font-size: 13px; }
   }
 
   /* ---- Footer ---- */
@@ -204,6 +248,52 @@
   <section class="step">
     <div class="step-head">
       <div class="step-num">01</div>
+      <h2>Impact: post-processing time, before vs. after</h2>
+    </div>
+    <p class="role">What it replaced: a manual, per-comparison workflow that scaled linearly with every simulation added.</p>
+    <p>Comparing two simulation runs used to mean downloading multi-gigabyte sim files, hand-adjusting camera angles for screenshots, assembling a slide deck, and manually transcribing force-report numbers into a spreadsheet. Here's the same task, step by step, before and after:</p>
+    <table class="compare">
+      <tr>
+        <th>Step</th>
+        <th>Before</th>
+        <th>After</th>
+      </tr>
+      <tr>
+        <td class="step-label">Retrieve run data</td>
+        <td class="time">Download full sim files (3&ndash;5GB each)</td>
+        <td class="time">Download force report + zipped images (small)</td>
+      </tr>
+      <tr>
+        <td class="step-label">Open &amp; navigate</td>
+        <td class="time">Open sim files, open scenes, adjust camera angles</td>
+        <td class="time">Drop into parsing folder</td>
+      </tr>
+      <tr>
+        <td class="step-label">Assemble comparison</td>
+        <td class="time">Screenshot/export, build slide deck</td>
+        <td class="time">Ready &mdash; images and metadata auto-aligned</td>
+      </tr>
+      <tr>
+        <td class="step-label">Compile metadata</td>
+        <td class="time">Manual entry into spreadsheet, plot by hand</td>
+        <td class="time">Included automatically</td>
+      </tr>
+      <tr class="total">
+        <td class="step-label">Total (2-run comparison)</td>
+        <td class="time">~65&ndash;105 min</td>
+        <td class="time">~7&ndash;10 min</td>
+      </tr>
+    </table>
+    <div class="table-note">Estimated from typical workflow steps, not a single timed instance.</div>
+
+    <div class="stat-row" style="grid-template-columns: 1fr;">
+      <div class="stat"><div class="num">~85%</div><div class="label">reduction in post-processing time per comparison</div></div>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="step-head">
+      <div class="step-num">02</div>
       <h2>Explorer: every run, one place, filterable</h2>
     </div>
     <p class="role">What it replaced: digging through individual Drive folders to find a specific run, with no consistent naming to search by.</p>
@@ -216,7 +306,7 @@
 
   <section class="step">
     <div class="step-head">
-      <div class="step-num">02</div>
+      <div class="step-num">03</div>
       <h2>Compare: two runs, side by side, in seconds</h2>
     </div>
     <p class="role">What it replaced: opening two separate result files and manually cross-referencing numbers.</p>
@@ -233,7 +323,7 @@
 
   <section class="step">
     <div class="step-head">
-      <div class="step-num">03</div>
+      <div class="step-num">04</div>
       <h2>Overlay: the feature teammates actually wanted</h2>
     </div>
     <p class="role">Added after direct teammate feedback: "I want to see exactly what changed between these two scenes, not two images side by side."</p>
@@ -246,7 +336,7 @@
 
   <section class="step">
     <div class="step-head">
-      <div class="step-num">04</div>
+      <div class="step-num">05</div>
       <h2>Performance: where trade-offs become visible</h2>
     </div>
     <p class="role">What it replaced: no way to see the whole design space at once, only one run at a time.</p>
@@ -259,7 +349,7 @@
 
   <section class="step">
     <div class="step-head">
-      <div class="step-num">05</div>
+      <div class="step-num">06</div>
       <h2>Analytics: the team's activity, not just one run</h2>
     </div>
     <p class="role">What it replaced: no visibility into who was running what, or whether coverage across components was balanced.</p>
