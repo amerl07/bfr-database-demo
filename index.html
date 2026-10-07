@@ -71,7 +71,7 @@
 
   .stat-row {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 1px;
     background: var(--line);
     border: 1px solid var(--line);
@@ -295,142 +295,18 @@
     <div class="stat-row">
       <div class="stat"><div class="num">60+</div><div class="label">simulations logged</div></div>
       <div class="stat"><div class="num">5</div><div class="label">contributing teammates</div></div>
-      <div class="stat"><div class="num">4</div><div class="label">versions shipped</div></div>
+      <div class="stat"><div class="num">5</div><div class="label">versions shipped</div></div>
       <div class="stat"><div class="num">2</div><div class="label">sweep types</div></div>
+      <div class="stat"><div class="num">40+</div><div class="label">parameters tracked</div></div>
     </div>
   </header>
 
   <section class="step">
     <div class="step-head">
       <div class="step-num">01</div>
-      <h2>How it works</h2>
-    </div>
-    <p>Each finished run on the HPC cluster produces a post.zip (force report + exported scene images). A harvester collects those automatically and the dashboard turns them into a queryable database.</p>
-    <ol class="flow" aria-label="Data pipeline">
-      <li><div class="t">Run finishes on HPC</div><div class="s">produces post.zip</div></li>
-      <li class="auto"><div class="t">Harvester pulls post.zip</div><div class="s">GitHub Actions &middot; automatic, via SSH</div></li>
-      <li><div class="t">Shared Drive</div><div class="s">one place for every run</div></li>
-      <li><div class="t">Parsed into database</div><div class="s">force data + scene images</div></li>
-      <li><div class="t">Dashboard</div><div class="s">desktop + mobile</div></li>
-    </ol>
-    <div class="table-note">Manual drop-in to the shared Drive is still supported as a fallback.</div>
-  </section>
-
-  <section class="step">
-    <div class="step-head">
-      <div class="step-num">02</div>
-      <h2>Explorer: every run, one place, filterable</h2>
-    </div>
-    <p class="role">What it replaced: digging through individual laptops and personal folders to find a specific run, with no consistent naming to search by and no record of who ran it.</p>
-    <p>Finished runs are harvested off the cluster automatically, so nobody has to upload anything. Component, sweep type, owner, and performance metrics are extracted and filterable, with the scene render shown up front so teammates recognize a run at a glance.</p>
-    <p><strong>Run provenance:</strong> every run records who ran it and when, sortable and filterable across everyone's runs.</p>
-    <p><strong>Shared baselines:</strong> starred baseline runs give the team a common reference point to compare new designs against.</p>
-    <figure>
-      <img src="assets/02_explorer.jpg" alt="Explorer view showing filterable grid of CFD simulations">
-      <figcaption>Explorer: all 61 simulations, filterable by component, sweep type, owner, date, and performance range; starred baselines marked</figcaption>
-    </figure>
-  </section>
-
-  <section class="step">
-    <div class="step-head">
-      <div class="step-num">03</div>
-      <h2>Sweeps: parametric runs linked automatically</h2>
-    </div>
-    <p class="role">A parametric sweep is a batch of runs that only make sense together.</p>
-    <p>Runs in the same sweep are parsed into one batch: they share tags for the swept variable and range, and each run cross-lists every other run in its sweep, so stepping through a sweep is one click per value. Sweeps are also filterable by swept variable in the Explorer.</p>
-    <figure>
-      <img src="assets/03_sweep_parsing.png" alt="Sweep information panel listing five linked runs in a MeshBase sweep from 30 to 60 mm">
-      <figcaption>Sweep information: a 5-run MeshBase sweep (30&ndash;60 mm), each run linked to the others</figcaption>
-    </figure>
-  </section>
-
-  <section class="step">
-    <div class="step-head">
-      <div class="step-num">04</div>
-      <h2>Compare: two runs, side by side</h2>
-    </div>
-    <p class="role">What it replaced: screenshotting scenes into slides and typing ~20 force-report terms per run into a spreadsheet.</p>
-    <p>Metadata and every performance metric are laid out delta-first, so green/red coloring shows which run won on each axis without doing the subtraction yourself. Scene galleries for both runs sit underneath, with an overlay tool for direct visual comparison.</p>
-    <figure>
-      <img src="assets/04a_compare_metadata.jpg" alt="Compare view showing metadata and performance delta table between two simulation runs">
-      <figcaption>Compare: metadata and performance deltas between a rear-wing bend baseline and its revision</figcaption>
-    </figure>
-    <figure>
-      <img src="assets/04b_scene_galleries.jpg" alt="Scene galleries showing CFD renders side by side for two runs">
-      <figcaption>Scene galleries: every render for both runs, searchable by name, ready to select for overlay</figcaption>
-    </figure>
-  </section>
-
-  <section class="step">
-    <div class="step-head">
-      <div class="step-num">05</div>
-      <h2>Scene Overlay</h2>
-    </div>
-    <p class="role">Added after direct teammate feedback of needing to compare flow fields.</p>
-    <p>Select a render from each run and the tool overlays them directly. No more manually lining up screenshots in slide decks.</p>
-    <figure>
-      <video src="assets/05_overlay_demo.mp4" autoplay loop muted playsinline aria-label="Animated demo of the scene overlay comparison tool blending two CFD renders"></video>
-      <figcaption>Scene overlay: blending two runs' renders to isolate exactly what changed</figcaption>
-    </figure>
-  </section>
-
-  <section class="step">
-    <div class="step-head">
-      <div class="step-num">06</div>
-      <h2>Performance: where trade-offs become visible</h2>
-    </div>
-    <p class="role">What it replaced: no way to see the whole design space at once, only one run at a time.</p>
-    <p>Any two metrics can be plotted against each other across every run in the dataset, colored by owner, sized by a third variable. This is where a downforce/drag trade-off across configurations actually becomes visible instead of implied.</p>
-    <figure>
-      <img src="assets/06_performance.jpg" alt="Scatter plot comparing total drag against total downforce across simulation runs">
-      <figcaption>Performance: Total Drag vs. Total DF across undertray configurations, colored by owner</figcaption>
-    </figure>
-  </section>
-
-  <section class="step">
-    <div class="step-head">
-      <div class="step-num">07</div>
-      <h2>Analytics: the team's activity, not just one run</h2>
-    </div>
-    <p class="role">What it replaced: no visibility into who was running what, or whether coverage across components was balanced.</p>
-    <p>A rolling view of team throughput: which components are getting the most simulation attention, who's contributing, and how activity trends across the season. Below that, a correlation matrix and auto-surfaced leaderboards (highest downforce, lowest drag, best downforce-to-drag ratio, lowest cell count) mean nobody has to sort a spreadsheet to find the best-performing geometry.</p>
-    <div class="two-up">
-      <figure>
-        <img src="assets/07a_analytics_overview.png" alt="Analytics dashboard showing team summary stats and simulation activity over time">
-        <figcaption>Team overview: component distribution, owner activity, simulation cadence</figcaption>
-      </figure>
-      <figure>
-        <img src="assets/07b_analytics_correlations.jpg" alt="Correlation matrix and top-performer leaderboards for simulation metrics">
-        <figcaption>Correlation matrix &amp; auto-ranked top performers</figcaption>
-      </figure>
-    </div>
-  </section>
-
-  <section class="step">
-    <div class="step-head">
-      <div class="step-num">08</div>
-      <h2>Access anywhere: results on a phone, not just a laptop</h2>
-    </div>
-    <p class="role">What it replaced: results that could only be viewed on the laptop they lived on.</p>
-    <p>The dashboard works on mobile, so teammates pull up renders and plots at testing and share them with other subteams.</p>
-    <div class="two-up phones">
-      <figure>
-        <img src="assets/08a_mobile_explorer.jpg" alt="Explorer on a phone showing simulation cards with scene renders and key metrics">
-        <figcaption>Explorer on a phone</figcaption>
-      </figure>
-      <figure>
-        <img src="assets/08b_mobile_gallery.jpg" alt="Scene gallery on a phone with two velocity renders selected">
-        <figcaption>Scene gallery, two renders selected</figcaption>
-      </figure>
-    </div>
-  </section>
-
-  <section class="step">
-    <div class="step-head">
-      <div class="step-num">09</div>
       <h2>Impact: routine comparisons, minutes instead of an hour</h2>
     </div>
-    <p class="role">Centralizing results also made the most common task, comparing two runs, much faster.</p>
+    <p class="role">Centralizing results made the most common task, comparing two runs, much faster.</p>
     <p>Before, this meant downloading and unzipping both post.zip files, building slides of side-by-side screenshots, and typing force-report numbers into a spreadsheet. The same task, step by step:</p>
     <table class="compare">
       <tr>
@@ -470,6 +346,131 @@
       <div class="stat"><div class="num">~85%</div><div class="label">reduction in time per two-run comparison</div></div>
     </div>
     <p style="margin-top: 20px;">Scope: inspecting anything outside the exported scenes still requires opening the full sim in STAR-CCM+. The database covers the routine comparisons that happen on every run.</p>
+  </section>
+
+  <section class="step">
+    <div class="step-head">
+      <div class="step-num">02</div>
+      <h2>How it works</h2>
+    </div>
+    <p>Each finished run on the HPC cluster produces a post.zip (force report + exported scene images). A harvester collects those automatically and the dashboard turns them into a queryable database.</p>
+    <ol class="flow" aria-label="Data pipeline">
+      <li><div class="t">Run finishes on HPC</div><div class="s">produces post.zip</div></li>
+      <li class="auto"><div class="t">Harvester pulls post.zip</div><div class="s">GitHub Actions &middot; automatic, via SSH</div></li>
+      <li><div class="t">Shared Drive</div><div class="s">one place for every run</div></li>
+      <li><div class="t">Parsed into database</div><div class="s">force data + scene images</div></li>
+      <li><div class="t">Dashboard</div><div class="s">desktop + mobile</div></li>
+    </ol>
+    <div class="table-note">Manual drop-in to the shared Drive is still supported as a fallback.</div>
+  </section>
+
+  <section class="step">
+    <div class="step-head">
+      <div class="step-num">03</div>
+      <h2>Explorer: every run, one place, filterable</h2>
+    </div>
+    <p class="role">What it replaced: digging through individual laptops and personal folders to find a specific run, with no consistent naming to search by and no record of who ran it.</p>
+    <p>Finished runs are harvested off the cluster automatically, so nobody has to upload anything. Component, sweep type, owner, and performance metrics are extracted and filterable, with the scene render shown up front so teammates recognize a run at a glance.</p>
+    <p><strong>Run provenance:</strong> every run records who ran it and when, sortable and filterable across everyone's runs.</p>
+    <p><strong>Shared baselines:</strong> starred baseline runs give the team a common reference point to compare new designs against.</p>
+    <figure>
+      <img src="assets/03_explorer.jpg" alt="Explorer view showing filterable grid of CFD simulations">
+      <figcaption>Explorer: all 61 simulations, filterable by component, sweep type, owner, date, and performance range; starred baselines marked</figcaption>
+    </figure>
+  </section>
+
+  <section class="step">
+    <div class="step-head">
+      <div class="step-num">04</div>
+      <h2>Sweeps: parametric runs linked automatically</h2>
+    </div>
+    <p class="role">A parametric sweep is a batch of runs that only make sense together.</p>
+    <p>Runs in the same sweep are parsed into one batch: they share tags for the swept variable and range, and each run cross-lists every other run in its sweep, so stepping through a sweep is one click per value. Sweeps are also filterable by swept variable in the Explorer.</p>
+    <figure>
+      <img src="assets/04_sweep_parsing.png" alt="Sweep information panel listing five linked runs in a MeshBase sweep from 30 to 60 mm">
+      <figcaption>Sweep information: a 5-run MeshBase sweep (30&ndash;60 mm), each run linked to the others</figcaption>
+    </figure>
+  </section>
+
+  <section class="step">
+    <div class="step-head">
+      <div class="step-num">05</div>
+      <h2>Compare: two runs, side by side</h2>
+    </div>
+    <p class="role">What it replaced: screenshotting scenes into slides and typing ~20 force-report terms per run into a spreadsheet.</p>
+    <p>Metadata and every performance metric are laid out delta-first, so green/red coloring shows which run won on each axis without doing the subtraction yourself. Scene galleries for both runs sit underneath, with an overlay tool for direct visual comparison.</p>
+    <figure>
+      <img src="assets/05a_compare_metadata.jpg" alt="Compare view showing metadata and performance delta table between two simulation runs">
+      <figcaption>Compare: metadata and performance deltas between a rear-wing bend baseline and its revision</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/05b_scene_galleries.jpg" alt="Scene galleries showing CFD renders side by side for two runs">
+      <figcaption>Scene galleries: every render for both runs, searchable by name, ready to select for overlay</figcaption>
+    </figure>
+  </section>
+
+  <section class="step">
+    <div class="step-head">
+      <div class="step-num">06</div>
+      <h2>Scene Overlay</h2>
+    </div>
+    <p class="role">Added after direct teammate feedback of needing to compare flow fields.</p>
+    <p>Select a render from each run and the tool overlays them directly. No more manually lining up screenshots in slide decks.</p>
+    <figure>
+      <video src="assets/06_overlay_demo.mp4" autoplay loop muted playsinline aria-label="Animated demo of the scene overlay comparison tool blending two CFD renders"></video>
+      <figcaption>Scene overlay: blending two runs' renders to isolate exactly what changed</figcaption>
+    </figure>
+  </section>
+
+  <section class="step">
+    <div class="step-head">
+      <div class="step-num">07</div>
+      <h2>Performance: where trade-offs become visible</h2>
+    </div>
+    <p class="role">What it replaced: no way to see the whole design space at once, only one run at a time.</p>
+    <p>Any two metrics can be plotted against each other across every run in the dataset, colored by owner, sized by a third variable. This is where a downforce/drag trade-off across configurations actually becomes visible instead of implied.</p>
+    <figure>
+      <img src="assets/07_performance.jpg" alt="Scatter plot comparing total drag against total downforce across simulation runs">
+      <figcaption>Performance: Total Drag vs. Total DF across undertray configurations, colored by owner</figcaption>
+    </figure>
+  </section>
+
+  <section class="step">
+    <div class="step-head">
+      <div class="step-num">08</div>
+      <h2>Analytics: the team's activity, not just one run</h2>
+    </div>
+    <p class="role">What it replaced: no visibility into who was running what, or whether coverage across components was balanced.</p>
+    <p>A rolling view of team throughput: which components are getting the most simulation attention, who's contributing, and how activity trends across the season. Below that, a correlation matrix and auto-surfaced leaderboards (highest downforce, lowest drag, best downforce-to-drag ratio, lowest cell count) mean nobody has to sort a spreadsheet to find the best-performing geometry.</p>
+    <div class="two-up">
+      <figure>
+        <img src="assets/08a_analytics_overview.png" alt="Analytics dashboard showing team summary stats and simulation activity over time">
+        <figcaption>Team overview: component distribution, owner activity, simulation cadence</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/08b_analytics_correlations.jpg" alt="Correlation matrix and top-performer leaderboards for simulation metrics">
+        <figcaption>Correlation matrix &amp; auto-ranked top performers</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="step-head">
+      <div class="step-num">09</div>
+      <h2>Access anywhere: results on a phone, not just a laptop</h2>
+    </div>
+    <p class="role">What it replaced: results that could only be viewed on the laptop they lived on.</p>
+    <p>The dashboard works on mobile, so teammates pull up renders and plots at testing and share them with other subteams.</p>
+    <div class="two-up phones">
+      <figure>
+        <img src="assets/09a_mobile_explorer.jpg" alt="Explorer on a phone showing simulation cards with scene renders and key metrics">
+        <figcaption>Explorer on a phone</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/09b_mobile_gallery.jpg" alt="Scene gallery on a phone with two velocity renders selected">
+        <figcaption>Scene gallery, two renders selected</figcaption>
+      </figure>
+    </div>
   </section>
 
   <footer>
