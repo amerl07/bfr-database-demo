@@ -153,47 +153,313 @@
     border-top: 1px solid var(--line);
   }
 
-  /* ---- Pipeline flow diagram ---- */
-  ol.flow {
-    list-style: none;
-    margin: 28px 0 0;
-    padding: 0;
-    display: flex;
-    gap: 22px;
-  }
-  ol.flow li {
+  /* ---- Architecture diagram ---- */
+  .arch {
+    --lane-1: #E9EDF2; --lane-1-ink: #4A5866;
+    --lane-2: #E6F0E8; --lane-2-ink: #3C6B4A;
+    --lane-3: #ECE9F4; --lane-3-ink: #5B4F86;
+    --lane-4: #F4ECE3; --lane-4-ink: #8A5A2E;
+    --lane-5: #E3EEF1; --lane-5-ink: #1C6577;
+    --edge: #9AA4AE;
+    --badge: #5B6672;
+    --accent: var(--amber);
+    --active: var(--cyan);
+    --arch-w: min(1120px, calc(100vw - 48px));
     position: relative;
-    flex: 1 1 0;
+    width: var(--arch-w);
+    margin: 18px 0 0 calc((100% - var(--arch-w)) / 2);
+  }
+  .arch-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: .86fr 1.1fr 1.1fr .97fr .97fr;
+    grid-template-rows: repeat(7, auto);
+    column-gap: 14px;
+    row-gap: 12px;
+  }
+  .arch-edges {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: visible;
+    pointer-events: none;
+  }
+  .lane {
+    grid-row: 1 / -1;
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-template-columns: minmax(0, 1fr);
+    padding: 9px 8px 10px;
+    border-radius: 10px;
+    background: var(--tint);
+  }
+  .lane.l4, .lane.l5 { grid-row: 3 / -1; }
+  .lane.l4 .lane-h, .lane.l5 .lane-h { align-self: start; }
+  .node.site { margin-top: 28px; }
+  #architecture .step-head { margin-bottom: 4px; }
+  #architecture h2 { margin-bottom: 0; }
+  .lane.l1 { --tint: var(--lane-1); --ink: var(--lane-1-ink); }
+  .lane.l2 { --tint: var(--lane-2); --ink: var(--lane-2-ink); }
+  .lane.l3 { --tint: var(--lane-3); --ink: var(--lane-3-ink); }
+  .lane.l4 { --tint: var(--lane-4); --ink: var(--lane-4-ink); }
+  .lane.l5 { --tint: var(--lane-5); --ink: var(--lane-5-ink); }
+  .lane-h {
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.2;
     min-width: 0;
+  }
+  .lane-h svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .lane-h em {
+    font-style: normal;
+    font-weight: 400;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    opacity: .8;
+    white-space: nowrap;
+  }
+
+  .node {
+    position: relative;
+    z-index: 2;
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(20, 24, 29, .06);
+    padding: 6px 10px 7px;
+    transition: opacity .2s, border-color .2s, box-shadow .2s;
+  }
+  .node .nt { font-size: 13.5px; font-weight: 600; line-height: 1.3; padding-right: 22px; }
+  .node .ns { font-size: 12px; color: var(--text-dim); line-height: 1.35; margin-top: 1px; }
+  .node .ns code, .node .nt code { font-family: 'IBM Plex Mono', monospace; font-size: .92em; }
+  .node .chip {
+    display: inline-block;
+    margin-top: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    line-height: 1.3;
+    color: var(--ink);
+    background: var(--tint);
+    border-radius: 4px;
+    padding: 1px 6px;
+  }
+  .node.ext {
+    grid-column: 4 / 6;
+    grid-row: 2;
+    align-self: center;
+    --ink: var(--text-dim);
+    --tint: var(--line);
+    border-style: dashed;
+    border-color: #A9B2BC;
+    background: transparent;
+    box-shadow: none;
+  }
+  .node.ext .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    margin-left: 6px;
+  }
+  .node.csv { align-self: center; }
+  .node.csv .nt { font-family: 'IBM Plex Mono', monospace; font-size: 14px; }
+  .node.site { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+  .node.site .bar {
+    display: flex; gap: 5px; padding: 6px 10px;
+    border-bottom: 1px solid var(--panel-line);
+    background: var(--bg);
+  }
+  .node.site .bar i { width: 7px; height: 7px; border-radius: 50%; background: #C9D0D7; }
+  .node.site .body { padding: 7px 10px 9px; display: flex; flex-direction: column; flex: 1; }
+  .node.site ul { list-style: none; margin: 7px 0 4px; padding: 0; display: flex; flex-direction: column; gap: 5px; flex: 1; }
+  .node.site li {
+    font-size: 12px;
+    border: 1px solid var(--panel-line);
+    border-radius: 5px;
+    padding: 3px 8px;
+    background: var(--bg);
+  }
+  .node.site .chip { align-self: flex-start; }
+
+  /* step badge (inline, outside the SVG) */
+  .sb {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--badge); color: #fff;
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600;
+    vertical-align: 1px; flex-shrink: 0;
+  }
+
+  /* design-decision markers */
+  .why {
+    position: absolute;
+    top: 8px; right: 8px;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid var(--accent);
+    background: var(--panel);
+    color: var(--accent);
+    font: 600 11px/1 'IBM Plex Mono', monospace;
+    padding: 0;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .why:hover, .why[aria-expanded="true"] { background: var(--accent); color: #fff; }
+  .why:focus-visible { outline: 2px solid var(--active); outline-offset: 2px; }
+  .why-pop {
+    position: absolute;
+    z-index: 5;
+    width: 300px;
+    max-width: calc(100% - 16px);
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-top: 2px solid var(--accent);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(20, 24, 29, .14);
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--text-dim);
+  }
+  .why-pop[hidden] { display: none; }
+  .why-pop h4 { margin: 0 0 4px; font-size: 13.5px; color: var(--text); font-weight: 600; }
+  .why-pop p { margin: 0; }
+
+  /* SVG edges */
+  .arch-edges .e path.line {
+    fill: none;
+    stroke: var(--edge);
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    marker-end: url(#ah);
+    transition: opacity .2s, stroke .2s;
+  }
+  .arch-edges .e.thin path.line { stroke-width: 1.1; }
+  .arch-edges .e.ctrl path.line { stroke-dasharray: 4 4; }
+  .arch-edges .e.accent path.line { stroke: var(--accent); stroke-width: 2; marker-end: url(#ah-accent); }
+  .arch-edges .e.on path.line { stroke: var(--active); marker-end: url(#ah-on); }
+  .arch-edges .badge circle { fill: var(--badge); transition: fill .2s; }
+  .arch-edges .e.accent .badge circle { fill: var(--accent); }
+  .arch-edges .e.on .badge circle { fill: var(--active); }
+  .arch-edges .badge text {
+    fill: #fff;
+    font: 600 11px 'IBM Plex Mono', monospace;
+    text-anchor: middle;
+    dominant-baseline: central;
+  }
+  .arch-edges .e, .arch-edges .badge { transition: opacity .2s; }
+  .arch-edges .dot { fill: var(--active); }
+
+  .arch.focus .e:not(.on) { opacity: .14; }
+  .arch.focus .node:not(.on) { opacity: .45; }
+  .node.on { border-color: var(--active); box-shadow: 0 0 0 1px var(--active); }
+  .node.ext.on { border-style: dashed; }
+
+  /* walkthrough */
+  .walk {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    min-height: 36px;
+  }
+  .walk button {
+    font: 500 12.5px 'IBM Plex Mono', monospace;
+    color: var(--text);
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: 6px;
+    padding: 7px 11px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .walk button:hover { border-color: var(--text-dim); }
+  .walk button:focus-visible { outline: 2px solid var(--active); outline-offset: 2px; }
+  .walk .cap {
+    margin: 0 0 0 8px;
+    font-size: 13.5px;
+    color: var(--text-dim);
+    display: flex;
+    gap: 9px;
+    align-items: baseline;
+  }
+  .walk .cap .sb { background: var(--active); }
+  .walk .cap code { font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; }
+
+  .step p.arch-intro { font-size: 15px; max-width: none; margin: 0; }
+  .arch-intro strong { color: var(--text); font-weight: 500; }
+  .arch-intro strong.o { color: var(--accent); }
+  .decisions-wrap { margin-top: 10px; }
+  .decisions-wrap summary {
+    cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: .02em;
+    color: var(--text-dim);
+    width: fit-content;
+  }
+  .decisions-wrap summary:hover { color: var(--text); }
+  .decisions-wrap[open] summary { margin-bottom: 12px; }
+  ol.decisions {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px;
+  }
+  ol.decisions li {
     background: var(--panel);
     border: 1px solid var(--line);
     border-radius: 3px;
-    padding: 14px 12px;
+    padding: 14px 16px;
+    display: flex;
+    gap: 12px;
   }
-  ol.flow li:not(:last-child)::after {
-    content: "\2192";
-    position: absolute;
-    right: -18px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-family: 'IBM Plex Mono', monospace;
-    color: var(--amber);
-    font-size: 15px;
+  ol.decisions .n {
+    flex-shrink: 0;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
+    font: 600 11px/17px 'IBM Plex Mono', monospace;
+    text-align: center;
   }
-  ol.flow li.auto { border-color: var(--cyan); }
-  ol.flow .t {
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1.3;
+  ol.decisions h4 { margin: 0 0 4px; font-size: 14.5px; font-weight: 600; }
+  ol.decisions p { margin: 0; font-size: 13.5px; color: var(--text-dim); line-height: 1.5; max-width: none; }
+  ol.decisions code, .why-pop code { font-family: 'IBM Plex Mono', monospace; font-size: .9em; }
+
+  @media (max-width: 859px) {
+    .arch { width: auto; margin-left: 0; }
+    .arch-grid { display: flex; flex-direction: column; gap: 30px; }
+    .arch-edges { display: none; }
+    .lane { display: flex; flex-direction: column; gap: 10px; position: relative; }
+    .lane:not(:last-of-type)::after {
+      content: "\2193";
+      position: absolute;
+      left: 50%;
+      bottom: -26px;
+      transform: translateX(-50%);
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--accent);
+      font-size: 15px;
+    }
+    .node.ext { align-self: stretch; }
+    .node.site { margin-top: 0; }
+    .node.site ul { flex-direction: row; flex-wrap: wrap; }
+    .walk { flex-wrap: wrap; }
+    .walk .cap { margin: 4px 0 0; flex-basis: 100%; }
   }
-  ol.flow .s {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11.5px;
-    color: var(--text-dim);
-    margin-top: 6px;
-    line-height: 1.4;
-  }
-  ol.flow li.auto .s { color: var(--cyan); }
 
   .two-up {
     display: grid;
@@ -251,15 +517,6 @@
     .two-up { grid-template-columns: 1fr; }
     .two-up.phones { max-width: 320px; }
     .stat-row { grid-template-columns: 1fr 1fr; }
-    ol.flow { flex-direction: column; }
-    ol.flow li:not(:last-child)::after {
-      content: "\2193";
-      right: auto;
-      left: 50%;
-      top: auto;
-      bottom: -21px;
-      transform: translateX(-50%);
-    }
     h1 { font-size: 30px; }
     table.compare th, table.compare td { padding: 9px 10px; font-size: 13px; }
   }
@@ -348,20 +605,148 @@
     <p style="margin-top: 20px;">Scope: inspecting anything outside the exported scenes still requires opening the full sim in STAR-CCM+. The database covers the routine comparisons that happen on every run.</p>
   </section>
 
-  <section class="step">
+  <section class="step" id="architecture">
     <div class="step-head">
       <div class="step-num">02</div>
-      <h2>How it works</h2>
+      <h2>How it works: from HPC to dashboard, fully automated</h2>
     </div>
-    <p>Each finished run on the HPC cluster produces a post.zip (force report + exported scene images). A harvester collects those automatically and the dashboard turns them into a queryable database.</p>
-    <ol class="flow" aria-label="Data pipeline">
-      <li><div class="t">Run finishes on HPC</div><div class="s">produces post.zip</div></li>
-      <li class="auto"><div class="t">Harvester pulls post.zip</div><div class="s">GitHub Actions &middot; automatic, via SSH</div></li>
-      <li><div class="t">Shared Drive</div><div class="s">one place for every run</div></li>
-      <li><div class="t">Parsed into database</div><div class="s">force data + scene images</div></li>
-      <li><div class="t">Dashboard</div><div class="s">desktop + mobile</div></li>
-    </ol>
-    <div class="table-note">Manual drop-in to the shared Drive is still supported as a fallback.</div>
+    <p class="arch-intro">A finished simulation reaches the dashboard with no one in the loop: <strong>5 managed platforms, 0 servers</strong>, new runs detected in <strong>~1 min</strong>, pipeline triggered every <strong>&le;5 min</strong>. Click an <strong class="o">orange circle</strong> for the trade-off behind that stage.</p>
+
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <defs>
+        <symbol id="i-server" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 6h.01M6 18h.01"/></symbol>
+        <symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></symbol>
+        <symbol id="i-workflow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="8" x="3" y="3" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect width="8" height="8" x="13" y="13" rx="2"/></symbol>
+        <symbol id="i-branch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v12"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></symbol>
+        <symbol id="i-window" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 8h20M6 6h.01M10 6h.01"/></symbol>
+      </defs>
+    </svg>
+
+    <div class="arch" id="arch">
+      <div class="arch-grid" id="arch-grid" role="img" aria-label="Pipeline architecture: HPC cluster, Google Workspace, GitHub Actions, GitHub repo, browser">
+        <svg class="arch-edges" id="arch-edges" aria-hidden="true"></svg>
+
+        <div class="lane l1">
+          <div class="lane-h"><svg><use href="#i-server"/></svg><span>HPC cluster</span><em>Sabalcore</em></div>
+          <div class="node" data-node="hpc" style="grid-row:2">
+            <div class="nt">CFD Runs</div>
+            <div class="ns">STAR-CCM+ &rarr; post.zip</div>
+            <span class="chip">PBS · HPC</span>
+          </div>
+        </div>
+
+        <div class="lane l2">
+          <div class="lane-h"><svg><use href="#i-folder"/></svg><span>Google Workspace</span></div>
+          <div class="node" data-node="drive" style="grid-row:3">
+            <div class="nt">Watched Drive Folder</div>
+            <div class="ns">Landing zone; manual drops OK</div>
+            <span class="chip">Google Drive</span>
+          </div>
+          <div class="node" data-node="watcher" style="grid-row:4">
+            <button class="why" data-why="1" aria-label="Design decision 1" aria-expanded="false">1</button>
+            <div class="nt">Drive Watcher</div>
+            <div class="ns">Polls Changes API every 1 min</div>
+            <span class="chip">Apps Script · Drive API</span>
+          </div>
+          <div class="node" data-node="queue" style="grid-row:5">
+            <div class="nt">Processing Queue</div>
+            <div class="ns">Sheet rows as a job queue</div>
+            <span class="chip">Google Sheets</span>
+          </div>
+          <div class="node" data-node="images" style="grid-row:6">
+            <div class="nt">Scene Images</div>
+            <div class="ns">Renders as linkable files</div>
+            <span class="chip">Google Drive</span>
+          </div>
+        </div>
+
+        <div class="node ext" data-node="cron">
+          <button class="why" data-why="2" aria-label="Design decision 2" aria-expanded="false">2</button>
+          <div class="nt">External Cron <span class="tag">external trigger</span></div>
+          <div class="ns">Fires <code>workflow_dispatch</code> every 5 min</div>
+          <span class="chip">cron-job.org · GitHub REST API</span>
+        </div>
+
+        <div class="lane l3">
+          <div class="lane-h"><svg><use href="#i-workflow"/></svg><span>GitHub Actions</span><em>CI runner</em></div>
+          <div class="node" data-node="harvest" style="grid-row:2">
+            <button class="why" data-why="5" aria-label="Design decision 5" aria-expanded="false">5</button>
+            <div class="nt">Harvester Job</div>
+            <div class="ns">SSH/SFTP; finished runs only</div>
+            <span class="chip">Python · paramiko</span>
+          </div>
+          <div class="node" data-node="consume" style="grid-row:4 / 6">
+            <button class="why" data-why="3" aria-label="Design decision 3" aria-expanded="false">3</button>
+            <div class="nt">Queue Consumer Job</div>
+            <div class="ns">Downloads and unzips post.zip, parses force reports, writes rows</div>
+            <span class="chip">Python · Drive/Sheets API</span>
+          </div>
+          <div class="node" data-node="deploy" style="grid-row:7">
+            <div class="nt">Deploy Job</div>
+            <div class="ns">Rebuilds on <code>web/**</code> changes</div>
+            <span class="chip">Next.js static export</span>
+          </div>
+        </div>
+
+        <div class="lane l4">
+          <div class="lane-h"><svg><use href="#i-branch"/></svg><span>GitHub repo</span></div>
+          <div class="node csv" data-node="csv" style="grid-row:2 / 4">
+            <button class="why" data-why="4" aria-label="Design decision 4" aria-expanded="false">4</button>
+            <div class="nt">results.csv</div>
+            <div class="ns">Source of truth: one row per run, ~60 columns, in git</div>
+            <span class="chip">CSV · git</span>
+          </div>
+        </div>
+
+        <div class="lane l5">
+          <div class="lane-h"><svg><use href="#i-window"/></svg><span>Browser</span><em>GitHub Pages</em></div>
+          <div class="node site" data-node="site" style="grid-row:1 / 6">
+            <div class="bar"><i></i><i></i><i></i></div>
+            <div class="body">
+              <div class="nt">BFR Simulations Database</div>
+              <ul>
+                <li>Explorer</li><li>Detail</li><li>Compare</li><li>Performance</li><li>Analytics</li>
+              </ul>
+              <span class="chip">Next.js · React · TanStack Query</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="why-pop" id="why-pop" role="tooltip" hidden></div>
+    </div>
+
+    <div class="walk">
+      <button type="button" id="walk-play">&#9654; Play</button>
+      <button type="button" id="walk-prev" aria-label="Previous step">&lsaquo;</button>
+      <button type="button" id="walk-next" aria-label="Next step">&rsaquo;</button>
+      <p class="cap" id="walk-cap" aria-live="polite">Press play, or step through the pipeline one hop at a time.</p>
+    </div>
+
+    <details class="decisions-wrap">
+      <summary>All 5 design decisions</summary>
+      <ol class="decisions" id="decisions">
+        <li data-why="1" data-node="watcher"><span class="n">1</span><div>
+          <h4>Polling over push</h4>
+          <p>Drive push notifications (the <code>changes.watch</code> webhook) were built but never fired reliably. Polling the Changes API once a minute is boring and dependable.</p>
+        </div></li>
+        <li data-why="2" data-node="cron"><span class="n">2</span><div>
+          <h4>External cron over GitHub <code>schedule:</code></h4>
+          <p>GitHub's built-in scheduler left 1.5&ndash;3 hour gaps on a 5-minute setting. An external service calling <code>workflow_dispatch</code> starts runs within seconds, and a shared concurrency group stops overlapping runs from racing.</p>
+        </div></li>
+        <li data-why="3" data-node="consume"><span class="n">3</span><div>
+          <h4>OAuth user credentials over a service account</h4>
+          <p>Service accounts have no Drive storage quota outside a Shared Drive, and the university Workspace doesn't allow creating one. The workable path was a real user's OAuth credentials, with the refresh token stored as a CI secret.</p>
+        </div></li>
+        <li data-why="4" data-node="csv"><span class="n">4</span><div>
+          <h4>A CSV in git as the database</h4>
+          <p>It's versioned, diffable, and needs no infrastructure. The site reads it at runtime, so new data never triggers a rebuild. Moving to hosted Postgres can wait until row volume or concurrent writes require it.</p>
+        </div></li>
+        <li data-why="5" data-node="harvest"><span class="n">5</span><div>
+          <h4>Safe &ldquo;finished&rdquo; detection</h4>
+          <p>A run counts as done only when both the zip <em>and</em> the PBS stdout log exist. PBS writes the log last, so a half-written zip is never uploaded. The harvester only reads from the cluster, and re-running it never duplicates queue rows or CSV rows.</p>
+        </div></li>
+      </ol>
+    </details>
   </section>
 
   <section class="step">
@@ -479,5 +864,233 @@
   </footer>
 </div>
 
+<script>
+(() => {
+  const arch = document.getElementById('arch');
+  const grid = document.getElementById('arch-grid');
+  const svg = document.getElementById('arch-edges');
+  const NS = 'http://www.w3.org/2000/svg';
+  const stacked = matchMedia('(max-width: 859px)');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+
+  const nodes = {};
+  grid.querySelectorAll('[data-node]').forEach(el => { nodes[el.dataset.node] = el; });
+  const lanes = [...grid.querySelectorAll('.lane')];
+
+  // y halfway (or at f) through the vertical overlap of two boxes
+  const ov = (a, b, f) => { const t = Math.max(a.t, b.t), bt = Math.min(a.b, b.b); return t + (bt - t) * f; };
+
+  // Each edge returns orthogonal waypoints from measured boxes (r) and lane gutters (g).
+  const EDGES = [
+    { step: 1, from: 'hpc', to: 'harvest', pts: r => { const y = ov(r.hpc, r.harvest, .5); return [[r.hpc.r, y], [r.harvest.l, y]]; } },
+    { step: 2, from: 'harvest', to: 'drive', pts: (r, g) => { const y0 = r.harvest.t + r.harvest.h * .72, y1 = r.drive.t + r.drive.h * .3; return [[r.harvest.l, y0], [g[1], y0], [g[1], y1], [r.drive.r, y1]]; } },
+    { step: 3, from: 'drive', to: 'watcher', badge: [16, 0], pts: r => [[r.drive.cx, r.drive.b], [r.drive.cx, r.watcher.t]] },
+    { step: 4, from: 'watcher', to: 'queue', badge: [16, 0], pts: r => [[r.watcher.cx, r.watcher.b], [r.watcher.cx, r.queue.t]] },
+    { step: 5, from: 'queue', to: 'consume', badge: [0, -13], pts: r => { const y = ov(r.queue, r.consume, .3); return [[r.queue.r, y], [r.consume.l, y]]; } },
+    { step: 6, from: 'drive', to: 'consume', pts: (r, g) => { const y0 = r.drive.t + r.drive.h * .74, y1 = r.consume.t + 22; return [[r.drive.r, y0], [g[1], y0], [g[1], y1], [r.consume.l, y1]]; } },
+    { step: 7, from: 'consume', to: 'images', pts: r => { const x = r.consume.l + 26, y = r.images.t + r.images.h * .3; return [[x, r.consume.b], [x, y], [r.images.r, y]]; } },
+    { step: 8, from: 'consume', to: 'csv', cls: 'accent', badge: [0, -15], pts: r => { const y = ov(r.consume, r.csv, .5); return [[r.consume.r, y], [r.csv.l, y]]; } },
+    { step: 9, from: 'csv', to: 'site', cls: 'accent', badge: [0, -15], pts: r => { const y = ov(r.csv, r.site, .5); return [[r.csv.r, y], [r.site.l, y]]; } },
+    { step: 10, from: 'images', to: 'site', cls: 'thin', pts: r => { const y = r.images.t + r.images.h * .72; return [[r.images.r, y], [r.site.l, y]]; } },
+    { from: 'cron', to: 'harvest', cls: 'ctrl', pts: r => { const y = ov(r.cron, r.harvest, .3); return [[r.cron.l, y], [r.harvest.r, y]]; } },
+    { from: 'cron', to: 'consume', cls: 'ctrl', pts: (r, g) => { const y0 = ov(r.cron, r.harvest, .75), y1 = r.consume.t + 18; return [[r.cron.l, y0], [g[2], y0], [g[2], y1], [r.consume.r, y1]]; } },
+    { from: 'consume', to: 'queue', cls: 'ctrl thin', pts: r => { const y = ov(r.queue, r.consume, .72); return [[r.consume.l, y], [r.queue.r, y]]; } },
+    { from: 'deploy', to: 'site', cls: 'ctrl', pts: r => [[r.deploy.r, r.deploy.cy], [r.site.l, r.deploy.cy]] },
+  ];
+
+  const CAPTIONS = {
+    1: 'The harvester job SSHes into the cluster and picks up finished runs only: both the zip and the PBS log must exist.',
+    2: 'Each new post.zip goes to the watched Drive folder through a resumable upload.',
+    3: 'Apps Script polls Drive’s change feed every minute and filters for new <code>post_*.zip</code> files.',
+    4: 'Each new file becomes a pending row in the queue sheet.',
+    5: 'The consumer job reads pending rows from the queue.',
+    6: 'It downloads the matching post.zip from Drive, unzips it, and parses the force reports.',
+    7: 'Extracted scene images go back to Drive as individually linkable files.',
+    8: 'Parsed rows are committed to <code>results.csv</code>, the versioned source of truth.',
+    9: 'The site fetches <code>results.csv</code> live at runtime, so new runs appear without a rebuild.',
+    10: 'Scene thumbnails load straight from their Drive links.',
+  };
+  const STEPS = Object.keys(CAPTIONS).length;
+
+  function roundedPath(pts, rad = 7) {
+    let d = `M${pts[0][0]},${pts[0][1]}`;
+    for (let i = 1; i < pts.length - 1; i++) {
+      const [x0, y0] = pts[i - 1], [x1, y1] = pts[i], [x2, y2] = pts[i + 1];
+      const d1 = Math.hypot(x1 - x0, y1 - y0), d2 = Math.hypot(x2 - x1, y2 - y1);
+      const rr = Math.min(rad, d1 / 2, d2 / 2);
+      if (!rr) continue;
+      d += ` L${x1 + (x0 - x1) / d1 * rr},${y1 + (y0 - y1) / d1 * rr}` +
+           ` Q${x1},${y1} ${x1 + (x2 - x1) / d2 * rr},${y1 + (y2 - y1) / d2 * rr}`;
+    }
+    const last = pts[pts.length - 1];
+    return d + ` L${last[0]},${last[1]}`;
+  }
+
+  const el = (tag, attrs = {}, parent) => {
+    const n = document.createElementNS(NS, tag);
+    for (const k in attrs) n.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(n);
+    return n;
+  };
+
+  let dot = null;
+
+  function draw() {
+    svg.textContent = '';
+    if (stacked.matches) return;
+    const box = grid.getBoundingClientRect();
+    svg.setAttribute('viewBox', `0 0 ${box.width} ${box.height}`);
+    const r = {};
+    for (const k in nodes) {
+      const b = nodes[k].getBoundingClientRect();
+      const l = b.left - box.left, t = b.top - box.top;
+      r[k] = { l, t, r: l + b.width, b: t + b.height, w: b.width, h: b.height, cx: l + b.width / 2, cy: t + b.height / 2 };
+    }
+    // g[i] = x midpoint of the gutter between lane i and lane i+1
+    const lr = lanes.map(n => n.getBoundingClientRect());
+    const g = lr.slice(0, -1).map((a, i) => (a.right + lr[i + 1].left) / 2 - box.left);
+
+    const defs = el('defs', {}, svg);
+    [['ah', 'var(--edge)'], ['ah-accent', 'var(--accent)'], ['ah-on', 'var(--active)']].forEach(([id, c]) => {
+      const m = el('marker', { id, viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 8, markerHeight: 8, markerUnits: 'userSpaceOnUse', orient: 'auto' }, defs);
+      el('path', { d: 'M0,1 L10,5 L0,9 z', style: `fill:${c}` }, m);
+    });
+
+    EDGES.forEach(e => {
+      const gEl = el('g', { class: `e ${e.cls || ''}` }, svg);
+      e.g = gEl;
+      const p = el('path', { class: 'line', d: roundedPath(e.pts(r, g)) }, gEl);
+      e.path = p;
+      if (e.step) {
+        const len = p.getTotalLength();
+        const pt = p.getPointAtLength(len / 2);
+        const [dx, dy] = e.badge || [0, 0];
+        // badges live inside the edge group so they dim/highlight with it
+        const b = el('g', { class: 'badge', transform: `translate(${pt.x + dx},${pt.y + dy})` }, gEl);
+        el('circle', { r: 9 }, b);
+        el('text', {}, b).textContent = e.step;
+      }
+    });
+    dot = el('circle', { class: 'dot', r: 4.5, opacity: 0 }, svg);
+    applyFocus();
+  }
+
+  // ---- highlighting ----
+  let step = 0, hoverNode = null;
+
+  function applyFocus() {
+    let onEdges = [], onNodes = [];
+    if (hoverNode) {
+      onEdges = EDGES.filter(e => e.from === hoverNode || e.to === hoverNode);
+      onNodes = [hoverNode, ...onEdges.flatMap(e => [e.from, e.to])];
+    } else if (step) {
+      onEdges = EDGES.filter(e => e.step === step);
+      onNodes = onEdges.flatMap(e => [e.from, e.to]);
+    }
+    arch.classList.toggle('focus', onNodes.length > 0);
+    EDGES.forEach(e => e.g && e.g.classList.toggle('on', onEdges.includes(e)));
+    for (const k in nodes) nodes[k].classList.toggle('on', onNodes.includes(k));
+  }
+
+  let raf = 0;
+  function runDot(e) {
+    cancelAnimationFrame(raf);
+    if (!dot || !e.path || reduced.matches || stacked.matches) return 0;
+    const len = e.path.getTotalLength();
+    const dur = Math.max(550, len * 3);
+    const t0 = performance.now();
+    dot.setAttribute('opacity', 1);
+    const tick = now => {
+      const k = Math.min(1, (now - t0) / dur);
+      const ease = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+      const p = e.path.getPointAtLength(len * ease);
+      dot.setAttribute('cx', p.x); dot.setAttribute('cy', p.y);
+      if (k < 1) raf = requestAnimationFrame(tick);
+      else dot.setAttribute('opacity', 0);
+    };
+    raf = requestAnimationFrame(tick);
+    return dur;
+  }
+
+  const cap = document.getElementById('walk-cap');
+  const playBtn = document.getElementById('walk-play');
+  function setStep(n) {
+    step = Math.max(0, Math.min(STEPS, n));
+    applyFocus();
+    if (!step) { cap.textContent = 'Press play, or step through the pipeline one hop at a time.'; return 0; }
+    cap.innerHTML = `<span class="sb">${step}</span><span>${CAPTIONS[step]}</span>`;
+    return runDot(EDGES.find(e => e.step === step));
+  }
+
+  let timer = 0, playing = false;
+  function stop() {
+    playing = false; clearTimeout(timer);
+    playBtn.innerHTML = '&#9654; Play';
+  }
+  function advance() {
+    if (step >= STEPS) { stop(); return; }
+    const dur = setStep(step + 1);
+    timer = setTimeout(advance, Math.max(2200, dur + 1400));
+  }
+  playBtn.addEventListener('click', () => {
+    if (playing) { stop(); return; }
+    playing = true;
+    playBtn.innerHTML = '&#10074;&#10074; Pause';
+    if (step >= STEPS) step = 0;
+    advance();
+  });
+  document.getElementById('walk-next').addEventListener('click', () => { stop(); setStep(step >= STEPS ? 1 : step + 1); });
+  document.getElementById('walk-prev').addEventListener('click', () => { stop(); setStep(step <= 1 ? STEPS : step - 1); });
+
+  const hover = k => { hoverNode = k; applyFocus(); };
+  for (const k in nodes) {
+    nodes[k].addEventListener('mouseenter', () => hover(k));
+    nodes[k].addEventListener('mouseleave', () => hover(null));
+  }
+  document.querySelectorAll('#decisions li').forEach(li => {
+    li.addEventListener('mouseenter', () => hover(li.dataset.node));
+    li.addEventListener('mouseleave', () => hover(null));
+  });
+
+  // ---- design-decision popovers ----
+  const pop = document.getElementById('why-pop');
+  let openBtn = null, pinned = false;
+  function showWhy(btn) {
+    if (openBtn && openBtn !== btn) openBtn.setAttribute('aria-expanded', 'false');
+    openBtn = btn;
+    const src = document.querySelector(`#decisions li[data-why="${btn.dataset.why}"] div`);
+    pop.innerHTML = src.innerHTML;
+    pop.hidden = false;
+    btn.setAttribute('aria-expanded', 'true');
+    const a = arch.getBoundingClientRect(), b = btn.getBoundingClientRect();
+    const w = pop.offsetWidth;
+    const left = Math.max(8, Math.min(a.width - w - 8, b.left - a.left + b.width / 2 - w + 24));
+    pop.style.left = left + 'px';
+    pop.style.top = (b.bottom - a.top + 8) + 'px';
+  }
+  function hideWhy() {
+    if (openBtn) openBtn.setAttribute('aria-expanded', 'false');
+    openBtn = null; pinned = false; pop.hidden = true;
+  }
+  document.querySelectorAll('.why').forEach(btn => {
+    btn.addEventListener('mouseenter', () => { if (!pinned) showWhy(btn); });
+    btn.addEventListener('mouseleave', () => { if (!pinned) hideWhy(); });
+    btn.addEventListener('focus', () => { if (!pinned) showWhy(btn); });
+    btn.addEventListener('blur', () => { if (!pinned) hideWhy(); });
+    btn.addEventListener('click', ev => {
+      ev.stopPropagation();
+      if (pinned && openBtn === btn) { hideWhy(); return; }
+      showWhy(btn); pinned = true;
+    });
+  });
+  document.addEventListener('click', ev => { if (pinned && !pop.contains(ev.target)) hideWhy(); });
+  document.addEventListener('keydown', ev => { if (ev.key === 'Escape') hideWhy(); });
+
+  new ResizeObserver(draw).observe(grid);
+  stacked.addEventListener('change', draw);
+  if (document.fonts) document.fonts.ready.then(draw);
+  draw();
+})();
+</script>
 </body>
 </html>
